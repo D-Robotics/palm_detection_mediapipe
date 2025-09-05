@@ -1,4 +1,4 @@
-# Changelog for package mono2d_palm_detection
+# Changelog for package palm_detection_mediapipe
 v1.0.0 (2025-09-05)
 ------------------
 1. 实现手掌检测基本功能，前后处理以及发送ai msg

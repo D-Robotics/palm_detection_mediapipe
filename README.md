@@ -24,7 +24,7 @@ Users can subscribe to the published `ai msg` for application development.
 
 # Preparation
 
-- RDK has been flashed with Ubuntu 20.04/22.04 system image.
+- RDK has been flashed with Ubuntu 22.04 system image.
 - Camera correctly connected to RDK S100.
 
 # Usage
