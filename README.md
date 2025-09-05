@@ -2,7 +2,7 @@
 
 # Feature Introduction
 
-The **mono2d_palm_detection** package is a monocular RGB palm detection algorithm example developed using the **hobot_dnn** package.  
+The **palm_detection_mediapipe** package is a monocular RGB palm detection algorithm example developed using the **hobot_dnn** package.  
 It runs on the RDK series development boards, leveraging the BPU processor for model inference with models and image data.  
 The model output includes palm detection bounding boxes and palm root keypoint detection results.
 
@@ -48,7 +48,7 @@ sudo apt install -y tros-humble-mono2d-palm-detection
 source /opt/tros/humble/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # Configure MIPI camera
 export CAM_TYPE=mipi
@@ -64,7 +64,7 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 source /opt/tros/humble/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # Configure USB camera
 export CAM_TYPE=usb
@@ -79,7 +79,7 @@ Only supported in tros humble version.
 
 ```shell
 # Copy the config files needed for running the example from the tros installation path
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # Configure local playback images
 export CAM_TYPE=fb
@@ -120,7 +120,7 @@ Target[] targets
 
 | Name                 | Message Type        | Description|
 | ---------------------- | ----------- |---------------------------- |
-| /hobot_mono2d_palm_detection          | [hobot_msgs/ai_msgs/msg/PerceptionTargets](https://github.com/D-Robotics/hobot_msgs/blob/develop/ai_msgs/msg/PerceptionTargets.msg)   | Publishes detected human target information |
+| /palm_detection_mediapipe          | [hobot_msgs/ai_msgs/msg/PerceptionTargets](https://github.com/D-Robotics/hobot_msgs/blob/develop/ai_msgs/msg/PerceptionTargets.msg)   | Publishes detected human target information |
 | /hbmem_img | [hobot_msgs/hbm_img_msgs/msg/HbmMsg1080P](https://github.com/D-Robotics/hobot_msgs/blob/develop/hbm_img_msgs/msg/HbmMsg1080P.msg)  | When is_shared_mem_sub == 1, subscribes to image data via shared memory|
 | /image_raw | hsensor_msgs/msg/Image  |  When is_shared_mem_sub == 0, subscribes to image data via standard ROS|
 
