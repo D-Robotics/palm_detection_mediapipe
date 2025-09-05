@@ -115,9 +115,6 @@ Perf[] perfs
 
 # Detected targets
 Target[] targets
-
-# Disappeared targets
-Target[] disappeared_targets
 ```
 
 
