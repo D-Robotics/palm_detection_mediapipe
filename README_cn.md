@@ -2,7 +2,7 @@
 
 # 功能介绍
 
-mono2d_palm_detection package是使用hobot_dnn package开发的单目rgb手掌检测算法示例，在RDK系列开发板上使用模型和图像数据利用BPU处理器进行模型推理。
+palm_detection_mediapipe package是使用hobot_dnn package开发的单目rgb手掌检测算法示例，在RDK系列开发板上使用模型和图像数据利用BPU处理器进行模型推理。
 模型输出包含手掌检测框和手掌根部关键点检测结果。
 
 示例订阅图片数据image msg，发布自定义的感知结果hobot ai msg，用户可以订阅发布的ai msg用于应用开发。
@@ -46,7 +46,7 @@ sudo apt install -y tros-humble-mono2d-palm-detection
 source /opt/tros/humble/setup.bash
 
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # 配置MIPI摄像头
 export CAM_TYPE=mipi
@@ -63,7 +63,7 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 source /opt/tros/humble/setup.bash
 
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # 配置USB摄像头
 export CAM_TYPE=usb
@@ -78,7 +78,7 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 
 ```shell
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
-cp -r /opt/tros/${TROS_DISTRO}/lib/mono2d_palm_detection/config/ .
+cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
 # 配置本地回灌图片
 export CAM_TYPE=fb
@@ -117,7 +117,7 @@ Target[] targets
 
 | 名称                 | 消息类型        | 说明|
 | ---------------------- | ----------- |---------------------------- |
-| /hobot_mono2d_palm_detection          | [hobot_msgs/ai_msgs/msg/PerceptionTargets](https://github.com/D-Robotics/hobot_msgs/blob/develop/ai_msgs/msg/PerceptionTargets.msg)   | 发布识别到的目标信息 |
+| /palm_detection_mediapipe          | [hobot_msgs/ai_msgs/msg/PerceptionTargets](https://github.com/D-Robotics/hobot_msgs/blob/develop/ai_msgs/msg/PerceptionTargets.msg)   | 发布识别到的目标信息 |
 | /hbmem_img | [hobot_msgs/hbm_img_msgs/msg/HbmMsg1080P](https://github.com/D-Robotics/hobot_msgs/blob/develop/hbm_img_msgs/msg/HbmMsg1080P.msg)  | 当is_shared_mem_sub == 1时，用shared mem通信方式订阅上一个node发布图像数据|
 | /image_raw | hsensor_msgs/msg/Image  |  当is_shared_mem_sub == 0时，订阅用ros的普通方式订阅上一个node发布相关的图像数据|
 
@@ -130,6 +130,6 @@ Target[] targets
 | is_sync_mode          | int         | 同步/异步推理模式。0：异步模式；1：同步模式                                                                                           | 否       | 0/1                  | 0                                                    |
 | model_file_name       | std::string | 推理使用的模型文件                                                                                                                    | 否       | 根据实际模型路径配置 | config/palm_det_192_192.hbm |
 | is_shared_mem_sub     | int         | 是否使用shared mem通信方式订阅图片消息。0：关闭；1：打开。打开和关闭shared mem通信方式订阅图片的topic名分别为/hbmem_img和/image_raw。 | 否       | 0/1                  | 1                                                    |
-| ai_msg_pub_topic_name | std::string | 发布包含手掌框和手指根部关键点感知结果的AI消息的topic名                                                                 | 否       | 根据实际部署环境配置 | /hobot_mono2d_palm_detection                         |
+| ai_msg_pub_topic_name | std::string | 发布包含手掌框和手指根部关键点感知结果的AI消息的topic名                                                                 | 否       | 根据实际部署环境配置 | /palm_detection_mediapipe                         |
 | ros_img_topic_name    | std::string | ros的image话题名 | 否       | 根据实际部署环境配置 | /image_raw                         |
 | image_gap    | int | 抽帧间隔，表示算法处理图像的频次，1表示每帧都处理，2表示每两帧处理一帧，以此类推 | 否       | 根据实际部署环境配置 | 1                         |
