@@ -85,7 +85,7 @@ cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 export CAM_TYPE=fb
 
 # Launch the file
-ros2 launch palm_detection_mediapipe palm_detection.launch.py publish_image_source:=config/person_body.jpg publish_image_format:=jpg publish_output_image_w:=640 publish_output_image_h:=480
+ros2 launch palm_detection_mediapipe palm_detection.launch.py publish_image_source:=config/example.jpg publish_image_format:=jpg publish_output_image_w:=640 publish_output_image_h:=480
 ```
 
 **4. View the results**
