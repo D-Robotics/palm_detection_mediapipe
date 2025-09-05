@@ -33,6 +33,8 @@ namespace hobot
 {
 namespace dnn_node
 {
+namespace parser_palm
+{
 // 解析后的检测框数据类型
 class PalmRect
 {
@@ -92,7 +94,7 @@ public:
     lmks.clear();
   }
 };
-
+}  // namespace parser_palm
 }  // namespace dnn_node
 }  // namespace hobot
 

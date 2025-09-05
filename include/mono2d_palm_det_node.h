@@ -28,10 +28,6 @@
 #include "hbm_img_msgs/msg/hbm_msg1080_p.hpp"
 #endif
 
-#ifndef PLATFORM_X86
-#include "hobot_mot/hobot_mot.h"
-#endif
-
 #include "ai_msgs/msg/capture_targets.hpp"
 #include "ai_msgs/msg/perception_targets.hpp"
 #include "dnn_node/dnn_node.h"
@@ -51,8 +47,10 @@ using hobot::dnn_node::DnnNodeOutput;
 using hobot::dnn_node::ModelTaskType;
 using hobot::dnn_node::NV12PyramidInput;
 
+using hobot::dnn_node::parser_palm::PalmRect;
+using hobot::dnn_node::parser_palm::PalmNodeOutput;
+using hobot::dnn_node::parser_palm::PalmDetResult;
 using hobot::dnn_node::parser_fasterrcnn::FasterRcnnKpsParserPara;
-using hobot::dnn_node::parser_fasterrcnn::LandmarksResult;
 
 // 使用output manage解决异步多线程情况下模型输出乱序的问题
 class NodeOutputManage
@@ -95,15 +93,6 @@ private:
   int model_input_height_ = -1;
 
   std::shared_ptr<FasterRcnnKpsParserPara> parser_para_ = nullptr;
-
-  // key is mot processing type, body/face/head/hand
-  // val is config file path
-#ifndef PLATFORM_X86
-
-  // key is mot processing type, body/face/head/hand
-  // val is mot instance
-  std::unordered_map<std::string, std::shared_ptr<HobotMot>> hobot_mots_;
-#endif
 
   int image_gap_ = 1;
 

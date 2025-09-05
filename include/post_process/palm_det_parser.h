@@ -33,8 +33,8 @@ using hobot::dnn_node::output_parser::Detection;
 using hobot::dnn_node::output_parser::DnnParserResult;
 using hobot::dnn_node::output_parser::Perception;
 using hobot::dnn_node::parser_fasterrcnn::Landmarks;
-using hobot::dnn_node::PalmDetResult;
-using hobot::dnn_node::PalmRect;
+using hobot::dnn_node::parser_palm::PalmDetResult;
+using hobot::dnn_node::parser_palm::PalmRect;
 using hobot::dnn_node::parser_fasterrcnn::Point;
 
 int32_t PalmDetParse(const std::vector<std::shared_ptr<DNNTensor>>& output_tensors,

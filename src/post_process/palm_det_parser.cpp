@@ -18,12 +18,12 @@
 #include "include/post_process/palm_det_parser.h"
 
 int32_t PalmDetParse(const std::vector<std::shared_ptr<DNNTensor>>& output_tensors,
-                     std::shared_ptr<hobot::dnn_node::PalmDetResult>& output_palm_res, const int scale,
+                     std::shared_ptr<PalmDetResult>& output_palm_res, const int scale,
                      const int min_score, const int iou_thr)
 {
   if (!output_palm_res)
   {
-    output_palm_res = std::make_shared<hobot::dnn_node::PalmDetResult>();
+    output_palm_res = std::make_shared<PalmDetResult>();
     output_palm_res->Reset();
   }
 

@@ -33,9 +33,6 @@
 #include "rcpputils/env.hpp"
 #include "rcutils/env.h"
 #include "opencv2/imgproc/types_c.h"
-#ifdef PLATFORM_X86
-using hobot_cv;
-#endif
 
 builtin_interfaces::msg::Time ConvertToRosTime(const struct timespec& time_spec)
 {
@@ -66,7 +63,7 @@ void NodeOutputManage::Feed(uint64_t ts_ms)
 std::vector<std::shared_ptr<DnnNodeOutput>> NodeOutputManage::Feed(const std::shared_ptr<DnnNodeOutput>& in_node_output)
 {
   std::vector<std::shared_ptr<DnnNodeOutput>> node_outputs{};
-  auto palm_node_output = std::dynamic_pointer_cast<hobot::dnn_node::PalmNodeOutput>(in_node_output);
+  auto palm_node_output = std::dynamic_pointer_cast<PalmNodeOutput>(in_node_output);
   if (!palm_node_output || !palm_node_output->image_msg_header)
   {
     return node_outputs;
@@ -226,36 +223,6 @@ Mono2dPalmDetNode::Mono2dPalmDetNode(const NodeOptions& options) : DnnNode("mono
     }
   }
 
-#ifdef BPU_LIBDNN
-  parser_para_ = std::make_shared<FasterRcnnKpsParserPara>();
-  hbDNNTensorProperties tensor_properties;
-  model_manage->GetOutputTensorProperties(tensor_properties, kps_output_index_);
-  parser_para_->aligned_kps_dim.clear();
-  parser_para_->kps_shifts_.clear();
-  for (int i = 0; i < tensor_properties.alignedShape.numDimensions; i++)
-  {
-    parser_para_->aligned_kps_dim.push_back(tensor_properties.alignedShape.dimensionSize[i]);
-  }
-  for (int i = 0; i < tensor_properties.shift.shiftLen; i++)
-  {
-    parser_para_->kps_shifts_.push_back(static_cast<uint8_t>(tensor_properties.shift.shiftData[i]));
-  }
-  {
-    std::stringstream ss;
-    ss << "aligned_kps_dim:";
-    for (const auto& val : parser_para_->aligned_kps_dim)
-    {
-      ss << " " << val;
-    }
-    ss << "\nkps_shifts: ";
-    for (const auto& val : parser_para_->kps_shifts_)
-    {
-      ss << " " << val;
-    }
-    ss << "\n";
-    RCLCPP_INFO(rclcpp::get_logger("mono2d_palm_det"), "%s", ss.str().c_str());
-  }
-#endif
   // create publisher to publish ai msgs
   msg_publisher_ = this->create_publisher<ai_msgs::msg::PerceptionTargets>(ai_msg_pub_topic_name_, 10);
   // get anchors for parse palm and key points
@@ -336,7 +303,7 @@ int Mono2dPalmDetNode::SetNodePara()
 int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs)
 {
   // RCLCPP_INFO(rclcpp::get_logger("mono2d_palm_det"), "Pointer: %p, Value: %f", outputs);
-  auto palmOutput = std::dynamic_pointer_cast<hobot::dnn_node::PalmNodeOutput>(outputs);
+  auto palmOutput = std::dynamic_pointer_cast<PalmNodeOutput>(outputs);
 
   if (!rclcpp::ok())
   {
@@ -349,7 +316,7 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
     return -1;
   }
   std::vector<std::shared_ptr<DnnNodeOutput>> node_outputs{};
-  auto palm_node_output = std::dynamic_pointer_cast<hobot::dnn_node::PalmNodeOutput>(outputs);
+  auto palm_node_output = std::dynamic_pointer_cast<PalmNodeOutput>(outputs);
   if (node_output_manage_ptr_)
   {
     // 启用了输出排序功能
@@ -377,7 +344,7 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
       continue;
     }
 
-    auto palmOutput = std::dynamic_pointer_cast<hobot::dnn_node::PalmNodeOutput>(node_output);
+    auto palmOutput = std::dynamic_pointer_cast<PalmNodeOutput>(node_output);
     {
       std::stringstream ss;
       ss << "Outputs from";
@@ -387,7 +354,7 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
       RCLCPP_INFO(rclcpp::get_logger("mono2d_palm_det"), "%s", ss.str().c_str());
     }
     int scale = palmOutput->scale;
-    std::shared_ptr<hobot::dnn_node::PalmDetResult> palm_det_res = nullptr;
+    std::shared_ptr<PalmDetResult> palm_det_res = nullptr;
 
     // 使用hobot dnn内置的Parse解析方法，解析算法输出的DNNTensor类型数据
     int ret = -1;
@@ -616,7 +583,7 @@ int Mono2dPalmDetNode::FeedFromLocal()
   // 2. 输入NV12 Input
   // inputs将会作为模型的输入通过InferTask接口传入
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
-  auto dnn_output = std::make_shared<hobot::dnn_node::PalmNodeOutput>();
+  auto dnn_output = std::make_shared<PalmNodeOutput>();
   // struct timespec time_now = { 0, 0 };
   // clock_gettime(CLOCK_REALTIME, &time_now);
   dnn_output->msg_header = std::make_shared<std_msgs::msg::Header>();
@@ -630,11 +597,6 @@ int Mono2dPalmDetNode::FeedFromLocal()
     RCLCPP_ERROR(rclcpp::get_logger("hobot_dosod"), "Run predict failed!");
     return -1;
   }
-
-  // 4. 处理输出
-  // std::vector<std::shared_ptr<hobot::dnn_node::palm_detPalmBbox>> results;
-  // std::shared_ptr<hobot::dnn_node::PalmDetResult> lmk_result = nullptr;
-  // PalmDetParse(dnn_output->output_tensors, results, lmk_result);
 
   return 0;
 }
@@ -750,7 +712,7 @@ void Mono2dPalmDetNode::RosImgProcess(const sensor_msgs::msg::Image::ConstShared
     RCLCPP_DEBUG(rclcpp::get_logger("mono2d_palm_det"), "after GetNV12Pyramid cost ms: %ld", interval);
   }
 
-  auto dnn_output = std::make_shared<hobot::dnn_node::PalmNodeOutput>();
+  auto dnn_output = std::make_shared<PalmNodeOutput>();
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
   dnn_output->image_msg_header = std::make_shared<std_msgs::msg::Header>();
   dnn_output->image_msg_header->set__frame_id(img_msg->header.frame_id);
@@ -886,7 +848,7 @@ void Mono2dPalmDetNode::SharedMemImgProcess(const hbm_img_msgs::msg::HbmMsg1080P
     RCLCPP_DEBUG(rclcpp::get_logger("mono2d_palm_det"), "after GetNV12Pyramid cost ms: %ld", interval);
   }
 
-  auto dnn_output = std::make_shared<hobot::dnn_node::PalmNodeOutput>();
+  auto dnn_output = std::make_shared<PalmNodeOutput>();
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
   dnn_output->image_msg_header = std::make_shared<std_msgs::msg::Header>();
   dnn_output->image_msg_header->set__frame_id(std::to_string(img_msg->index));
