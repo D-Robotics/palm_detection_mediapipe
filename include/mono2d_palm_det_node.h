@@ -34,7 +34,7 @@
 #include "dnn_node/util/output_parser/detection/fasterrcnn_output_parser.h"
 #include "include/post_process/palm_det_output_parser.h"
 
-#include "post_process/palm_det_parser.h"
+#include "include/post_process/palm_det_parser.h"
 
 #ifndef MONO2D_PALM_DET_NODE_H_
 #define MONO2D_PALM_DET_NODE_H_
@@ -47,10 +47,10 @@ using hobot::dnn_node::DnnNodeOutput;
 using hobot::dnn_node::ModelTaskType;
 using hobot::dnn_node::NV12PyramidInput;
 
-using hobot::dnn_node::parser_palm::PalmRect;
-using hobot::dnn_node::parser_palm::PalmNodeOutput;
-using hobot::dnn_node::parser_palm::PalmDetResult;
 using hobot::dnn_node::parser_fasterrcnn::FasterRcnnKpsParserPara;
+
+using parser_palm::PalmDetResult;
+using parser_palm::PalmRect;
 
 // 使用output manage解决异步多线程情况下模型输出乱序的问题
 class NodeOutputManage

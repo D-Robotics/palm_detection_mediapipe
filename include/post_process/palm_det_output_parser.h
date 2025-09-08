@@ -28,11 +28,8 @@
 #include "dnn_node/util/output_parser/detection/fasterrcnn_output_parser.h"
 
 using hobot::dnn_node::parser_fasterrcnn::Landmarks;
+using hobot::dnn_node::DnnNodeOutput;
 
-namespace hobot
-{
-namespace dnn_node
-{
 namespace parser_palm
 {
 // 解析后的检测框数据类型
@@ -95,7 +92,5 @@ public:
   }
 };
 }  // namespace parser_palm
-}  // namespace dnn_node
-}  // namespace hobot
 
 #endif  // PALM_DETECTION_OUTPUT_PARSER_H

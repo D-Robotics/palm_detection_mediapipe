@@ -63,7 +63,7 @@ void NodeOutputManage::Feed(uint64_t ts_ms)
 std::vector<std::shared_ptr<DnnNodeOutput>> NodeOutputManage::Feed(const std::shared_ptr<DnnNodeOutput>& in_node_output)
 {
   std::vector<std::shared_ptr<DnnNodeOutput>> node_outputs{};
-  auto palm_node_output = std::dynamic_pointer_cast<PalmNodeOutput>(in_node_output);
+  auto palm_node_output = std::dynamic_pointer_cast<parser_palm::PalmNodeOutput>(in_node_output);
   if (!palm_node_output || !palm_node_output->image_msg_header)
   {
     return node_outputs;
@@ -303,7 +303,7 @@ int Mono2dPalmDetNode::SetNodePara()
 int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs)
 {
   // RCLCPP_INFO(rclcpp::get_logger("mono2d_palm_det"), "Pointer: %p, Value: %f", outputs);
-  auto palmOutput = std::dynamic_pointer_cast<PalmNodeOutput>(outputs);
+  auto palmOutput = std::dynamic_pointer_cast<parser_palm::PalmNodeOutput>(outputs);
 
   if (!rclcpp::ok())
   {
@@ -316,7 +316,7 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
     return -1;
   }
   std::vector<std::shared_ptr<DnnNodeOutput>> node_outputs{};
-  auto palm_node_output = std::dynamic_pointer_cast<PalmNodeOutput>(outputs);
+  auto palm_node_output = std::dynamic_pointer_cast<parser_palm::PalmNodeOutput>(outputs);
   if (node_output_manage_ptr_)
   {
     // 启用了输出排序功能
@@ -344,7 +344,7 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
       continue;
     }
 
-    auto palmOutput = std::dynamic_pointer_cast<PalmNodeOutput>(node_output);
+    auto palmOutput = std::dynamic_pointer_cast<parser_palm::PalmNodeOutput>(node_output);
     {
       std::stringstream ss;
       ss << "Outputs from";
@@ -583,7 +583,7 @@ int Mono2dPalmDetNode::FeedFromLocal()
   // 2. 输入NV12 Input
   // inputs将会作为模型的输入通过InferTask接口传入
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
-  auto dnn_output = std::make_shared<PalmNodeOutput>();
+  auto dnn_output = std::make_shared<parser_palm::PalmNodeOutput>();
   // struct timespec time_now = { 0, 0 };
   // clock_gettime(CLOCK_REALTIME, &time_now);
   dnn_output->msg_header = std::make_shared<std_msgs::msg::Header>();
@@ -712,7 +712,7 @@ void Mono2dPalmDetNode::RosImgProcess(const sensor_msgs::msg::Image::ConstShared
     RCLCPP_DEBUG(rclcpp::get_logger("mono2d_palm_det"), "after GetNV12Pyramid cost ms: %ld", interval);
   }
 
-  auto dnn_output = std::make_shared<PalmNodeOutput>();
+  auto dnn_output = std::make_shared<parser_palm::PalmNodeOutput>();
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
   dnn_output->image_msg_header = std::make_shared<std_msgs::msg::Header>();
   dnn_output->image_msg_header->set__frame_id(img_msg->header.frame_id);
@@ -848,7 +848,7 @@ void Mono2dPalmDetNode::SharedMemImgProcess(const hbm_img_msgs::msg::HbmMsg1080P
     RCLCPP_DEBUG(rclcpp::get_logger("mono2d_palm_det"), "after GetNV12Pyramid cost ms: %ld", interval);
   }
 
-  auto dnn_output = std::make_shared<PalmNodeOutput>();
+  auto dnn_output = std::make_shared<parser_palm::PalmNodeOutput>();
   auto inputs = std::vector<std::shared_ptr<DNNInput>>{ pyramid };
   dnn_output->image_msg_header = std::make_shared<std_msgs::msg::Header>();
   dnn_output->image_msg_header->set__frame_id(std::to_string(img_msg->index));
