@@ -1,4 +1,9 @@
 # Changelog for package palm_detection_mediapipe
+
+v1.1.0 (2026-01-04)
+------------------
+1. 适配 RDK S600 平台
+
 v1.0.0 (2025-09-05)
 ------------------
 1. 实现手掌检测基本功能，前后处理以及发送ai msg
