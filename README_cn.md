@@ -48,7 +48,8 @@ sudo apt install -y tros-${TROS_DISTRO}-mono2d-palm-detection
 **使用MIPI摄像头发布图片**
 
 ```shell
-# 配置tros.b humble环境
+# 配置tros.b 环境
+export TROS_DISTRO=humble
 source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
@@ -65,7 +66,8 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 **使用USB摄像头发布图片**
 
 ```shell
-# 配置tros.b humble环境
+# 配置tros.b 环境
+export TROS_DISTRO=humble
 source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
@@ -80,9 +82,10 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 
 **使用本地回灌图片**
 
-仅支持 `tros ${TROS_DISTRO}` 版本。
-
 ```shell
+export TROS_DISTRO=humble
+source /opt/tros/${TROS_DISTRO}/setup.bash
+
 # 从tros.b的安装路径中拷贝出运行示例需要的配置文件。
 cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 

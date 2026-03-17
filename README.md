@@ -51,6 +51,7 @@ sudo apt install -y tros-${TROS_DISTRO}-mono2d-palm-detection
 
 ```shell
 # Configure tros environment
+export TROS_DISTRO=humble
 source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
@@ -67,6 +68,7 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 
 ```shell
 # Configure tros environment
+export TROS_DISTRO=humble
 source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
@@ -84,6 +86,9 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 Only supported in tros version.
 
 ```shell
+export TROS_DISTRO=humble
+source /opt/tros/${TROS_DISTRO}/setup.bash
+
 # Copy the config files needed for running the example from the tros installation path
 cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 
