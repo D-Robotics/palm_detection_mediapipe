@@ -186,9 +186,13 @@ Mono2dPalmDetNode::Mono2dPalmDetNode(const NodeOptions& options) : DnnNode("mono
   {
     std::stringstream ss;
     ss << "Parameter:"
-       << "\n is_sync_mode_: " << is_sync_mode_ << "\n model_file_name_: " << model_file_name_
-       << "\n is_shared_mem_sub: " << is_shared_mem_sub_ << "\n ai_msg_pub_topic_name: " << ai_msg_pub_topic_name_
-       << "\n ros_img_topic_name: " << ros_img_topic_name_ << "\n image_gap: " << image_gap_;
+       << "\n is_sync_mode_: " << is_sync_mode_ 
+       << "\n model_file_name_: " << model_file_name_
+       << "\n is_shared_mem_sub: " << is_shared_mem_sub_ 
+       << "\n ai_msg_pub_topic_name: " << ai_msg_pub_topic_name_
+       << "\n ros_img_topic_name: " << ros_img_topic_name_ 
+       << "\n image_gap: " << image_gap_
+       << "\n min_score: " << min_score_;
     RCLCPP_WARN(rclcpp::get_logger("mono2d_palm_det"), "%s", ss.str().c_str());
   }
 
@@ -388,10 +392,10 @@ int Mono2dPalmDetNode::PostProcess(const std::shared_ptr<DnnNodeOutput>& outputs
     for (const auto& idx : indices)
     {
       // if you want show palm detection results in web, you can use this code to filter low score detction results
-      // if (boxes[idx].conf < min_score_)
-      // {
-      //   continue;
-      // }
+      if (boxes[idx].conf < min_score_)
+      {
+        continue;
+      }
       ai_msgs::msg::Target target;
       target.set__type("palm");
 

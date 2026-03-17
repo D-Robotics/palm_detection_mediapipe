@@ -87,9 +87,13 @@ protected:
 
 private:
 
-  float min_score_ = 0;
+  float min_score_ = 0.6;
 
+#ifdef PLATFORM_X5
+  std::string model_file_name_ = "config/palm_det_192_192.bin";
+#else
   std::string model_file_name_ = "config/palm_det_192_192.hbm";
+#endif
   std::string model_name_ = ""; // if empty, use the first model in the file
   ModelTaskType model_task_type_ = ModelTaskType::ModelInferType;
 

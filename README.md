@@ -2,7 +2,7 @@ English | [简体中文](./README_cn.md)
 
 # Feature Introduction
 
-The **palm_detection_mediapipe** package is a monocular RGB palm detection algorithm example developed using the **hobot_dnn** package.  
+The **palm_detection_mediapipe** package is a monocular RGB palm detection algorithm example form [mediapipe](https://github.com/google-ai-edge/mediapipe/tree/master/mediapipe) developed using the **hobot_dnn** package.  
 It runs on the RDK series development boards, leveraging the BPU processor for model inference with models and image data.  
 The model output includes palm detection bounding boxes and palm root keypoint detection results.
 
@@ -13,19 +13,23 @@ Users can subscribe to the published `ai msg` for application development.
 
 | Model Type | Supported Platform |
 | :--------- | ------------------ |
-| mediapipe  | RDK S100           |
+| mediapipe           | RDK X5, RDK X5 Module |
+| mediapipe           | RDK S100, RDK S100P |
+| mediapipe           | RDK S600 |
 
 # Bill of Materials
 
 | Item Name  | Manufacturer | Reference Link |
 | :--------- | ------------ | ---------------|
-| RDK S100   | Multiple     | [RDK S100](https://developer.horizon.cc/rdks100) |
-| Camera     | Multiple     | [MIPI Camera](https://developer.horizon.cc/nodehubdetail/168958376283445781)<br>[USB Camera](https://developer.horizon.cc/nodehubdetail/168958376283445777)|
+| RDK X5, RDK X5 Module | D-Robotics | [RDK X5](https://developer.d-robotics.cc/rdkx5) |
+| RDK S100, RDK S100P   | D-Robotics     | [RDK S100](https://developer.d-robotics.cc/rdks100) |
+| RDK S600   | D-Robotics     | [RDK S600](https://developer.d-robotics.cc/rdks600) |
+| Camera     | Multiple     | [MIPI Camera](https://developer.d-robotics.cc/nodehubdetail/168958376283445781)<br>[USB Camera](https://developer.d-robotics.cc/nodehubdetail/168958376283445777)|
 
 # Preparation
 
-- RDK has been flashed with Ubuntu 22.04 system image.
-- Camera correctly connected to RDK S100.
+- RDK has been flashed with Ubuntu 22.04/Ubuntu 24.04 system image.
+- Camera correctly connected to RDK Devices.
 
 # Usage
 
@@ -35,8 +39,10 @@ After powering on the robot, connect to it via SSH terminal or VNC.
 Click the "One-click Deployment" button on the top right of this page, then copy the following command and run it on the RDK system to install the related Node.
 
 ```bash
+# If You use Ubuntu24.04, use jazzy as 'export TROS_DISTRO=jazzy'
+export TROS_DISTRO=humble
 sudo apt update
-sudo apt install -y tros-humble-mono2d-palm-detection
+sudo apt install -y tros-${TROS_DISTRO}-mono2d-palm-detection
 ```
 
 **2. Run mediapipe palm detection**
@@ -44,8 +50,8 @@ sudo apt install -y tros-humble-mono2d-palm-detection
 **Using MIPI Camera to publish images**
 
 ```shell
-# Configure tros humble environment
-source /opt/tros/humble/setup.bash
+# Configure tros environment
+source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
 cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
@@ -60,8 +66,8 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 **Using USB Camera to publish images**
 
 ```shell
-# Configure tros humble environment
-source /opt/tros/humble/setup.bash
+# Configure tros environment
+source /opt/tros/${TROS_DISTRO}/setup.bash
 
 # Copy the config files needed for running the example from the tros installation path
 cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
@@ -75,7 +81,7 @@ ros2 launch palm_detection_mediapipe palm_detection.launch.py
 
 **Using Local Playback Images**
 
-Only supported in tros humble version.
+Only supported in tros version.
 
 ```shell
 # Copy the config files needed for running the example from the tros installation path
@@ -85,7 +91,7 @@ cp -r /opt/tros/${TROS_DISTRO}/lib/palm_detection_mediapipe/config/ .
 export CAM_TYPE=fb
 
 # Launch the file
-ros2 launch palm_detection_mediapipe palm_detection.launch.py publish_image_source:=config/example.jpg publish_image_format:=jpg publish_output_image_w:=640 publish_output_image_h:=480
+ros2 launch palm_detection_mediapipe palm_detection.launch.py publish_image_source:=config/example.jpg publish_image_format:=jpg
 ```
 
 **4. View the results**
@@ -117,14 +123,11 @@ Perf[] perfs
 Target[] targets
 ```
 
-
 | Name                 | Message Type        | Description|
 | ---------------------- | ----------- |---------------------------- |
 | /palm_detection_mediapipe          | [hobot_msgs/ai_msgs/msg/PerceptionTargets](https://github.com/D-Robotics/hobot_msgs/blob/develop/ai_msgs/msg/PerceptionTargets.msg)   | Publishes detected human target information |
 | /hbmem_img | [hobot_msgs/hbm_img_msgs/msg/HbmMsg1080P](https://github.com/D-Robotics/hobot_msgs/blob/develop/hbm_img_msgs/msg/HbmMsg1080P.msg)  | When is_shared_mem_sub == 1, subscribes to image data via shared memory|
 | /image_raw | hsensor_msgs/msg/Image  |  When is_shared_mem_sub == 0, subscribes to image data via standard ROS|
-
-
 
 ## Parameters
 
@@ -136,3 +139,4 @@ Target[] targets
 | ai\_msg\_pub\_topic\_name | std::string | Topic name for publishing AI messages containing keypoints detection results.           | No       | Configurable         | /hobot\_mono2d\_palm\_detection |
 | ros\_img\_topic\_name     | std::string | ROS image topic name                                                                                                      | No       | Configurable         | /image\_raw                     |
 | image\_gap                | int         | Frame skipping interval. `1`: process every frame, `2`: process every two frames, etc.                                    | No       | Configurable         | 1                               |
+| min_score    | float | Threshold | 否       | Configurable | 0.6                         |
