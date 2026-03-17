@@ -32,11 +32,8 @@ def generate_launch_description():
     image_height_launch_arg = DeclareLaunchArgument(
         "palm_det_height", default_value=TextSubstitution(text="480")
     )
-    model_file_name_launch_arg = DeclareLaunchArgument(
-        "palm_model_file_name", default_value=TextSubstitution(text="config/palm_det_192_192.hbm")
-    )
-    model_type_launch_arg = DeclareLaunchArgument(
-        "palm_model_type", default_value=TextSubstitution(text="0")
+    score_type_launch_arg = DeclareLaunchArgument(
+        "palm_min_score", default_value=TextSubstitution(text="0.6")
     )
     camera_type = os.getenv('CAM_TYPE')
     print("camera_type is ", camera_type)
@@ -159,14 +156,11 @@ def generate_launch_description():
         executable='palm_detection_mediapipe',
         output='screen',
         parameters=[
-            {"model_file_name": LaunchConfiguration('palm_model_file_name')},
-            {"model_type": LaunchConfiguration('palm_model_type')},
             {"ai_msg_pub_topic_name": LaunchConfiguration('palm_det_pub_topic')},
-            {"min_score":0.4}
+            {"min_score": LaunchConfiguration('palm_min_score')}
         ],
         arguments=['--ros-args', '--log-level', 'warn']
     )
-
 
     shared_mem_node = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -179,8 +173,7 @@ def generate_launch_description():
         return LaunchDescription([
             image_width_launch_arg,
             image_height_launch_arg,
-            model_file_name_launch_arg,
-            model_type_launch_arg,
+            score_type_launch_arg,
             camera_device_arg,
             # 启动零拷贝环境配置node
             shared_mem_node,
@@ -199,8 +192,7 @@ def generate_launch_description():
         return LaunchDescription([
             image_width_launch_arg,
             image_height_launch_arg,
-            model_file_name_launch_arg,
-            model_type_launch_arg,
+            score_type_launch_arg,
             # 启动零拷贝环境配置node
             shared_mem_node,
             # image publish
